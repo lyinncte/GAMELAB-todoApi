@@ -1,0 +1,18 @@
+$kind: http-request
+url: "{{baseUrl}}/api/stats/summary"
+method: GET
+headers:
+  x-api-key: "{{vault:api-key}}"
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status 200", () => pm.response.to.have.status(200));
+      const json = pm.response.json();
+      pm.test('Berisi ringkasan', () => {
+        pm.expect(json.data.todos.total).to.be.a("number");
+        pm.expect(json.data).to.have.property("generatedAt");
+      });
+    language: text/javascript
+order: 1000

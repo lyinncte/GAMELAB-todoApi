@@ -1,0 +1,26 @@
+$kind: http-request
+url: "{{baseUrl}}/api/auth/register"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "User Lain",
+      "email": "{{email2}}",
+      "password": "{{password}}"
+    }
+auth:
+  type: noauth
+scripts:
+  - type: beforeRequest
+    code: pm.environment.set('email2', `postman_lain_${Date.now()}@example.com`);
+    language: text/javascript
+  - type: afterResponse
+    code: |-
+      pm.test("Status 201", () => pm.response.to.have.status(201));
+      const json = pm.response.json();
+      pm.environment.set('tokenOther', json.data.token);
+    language: text/javascript
+order: 9000

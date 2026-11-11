@@ -1,0 +1,17 @@
+$kind: http-request
+url: "{{baseUrl}}/api/todos?status=pending&priority=high"
+method: GET
+queryParams:
+  status: pending
+  priority: high
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status 200", () => pm.response.to.have.status(200));
+      const json = pm.response.json();
+      pm.test('Semua hasil sesuai filter', () => json.data.forEach((t) => {
+        pm.expect(t.status).to.eql('pending');
+        pm.expect(t.priority).to.eql('high');
+      }));
+    language: text/javascript
+order: 4000

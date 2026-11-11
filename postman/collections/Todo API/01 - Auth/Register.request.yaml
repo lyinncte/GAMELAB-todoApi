@@ -1,0 +1,32 @@
+$kind: http-request
+description: Membuat user baru dengan email unik setiap kali dijalankan, lalu menyimpan token.
+url: "{{baseUrl}}/api/auth/register"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Postman User",
+      "email": "{{email}}",
+      "password": "{{password}}"
+    }
+auth:
+  type: noauth
+scripts:
+  - type: beforeRequest
+    code: pm.environment.set('email', `postman_${Date.now()}@example.com`);
+    language: text/javascript
+  - type: afterResponse
+    code: |-
+      pm.test("Status 201", () => pm.response.to.have.status(201));
+      const json = pm.response.json();
+      pm.test('Mengembalikan token dan user tanpa password', () => {
+        pm.expect(json.data.token).to.be.a("string");
+        pm.expect(json.data.user).to.not.have.property("password");
+        pm.expect(json.data.user.role).to.eql("user");
+      });
+      pm.environment.set('token', json.data.token);
+    language: text/javascript
+order: 1000

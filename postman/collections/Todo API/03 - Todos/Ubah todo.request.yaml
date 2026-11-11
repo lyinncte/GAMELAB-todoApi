@@ -1,0 +1,20 @@
+$kind: http-request
+url: "{{baseUrl}}/api/todos/{{todoId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "title": "Belajar Postman (diubah)",
+      "priority": "medium"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status 200", () => pm.response.to.have.status(200));
+      const json = pm.response.json();
+      pm.test('Judul berubah', () => pm.expect(json.data.title).to.eql('Belajar Postman (diubah)'));
+    language: text/javascript
+order: 9000

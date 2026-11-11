@@ -1,0 +1,22 @@
+$kind: http-request
+url: "{{baseUrl}}/api/todos/{{todoId}}/status"
+method: PATCH
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "status": "done"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status 200", () => pm.response.to.have.status(200));
+      const json = pm.response.json();
+      pm.test('done + completedAt terisi', () => {
+        pm.expect(json.data.status).to.eql('done');
+        pm.expect(json.data.completedAt).to.be.a("string");
+      });
+    language: text/javascript
+order: 10000

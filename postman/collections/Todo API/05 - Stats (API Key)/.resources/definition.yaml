@@ -1,0 +1,3 @@
+$kind: collection
+description: Dilindungi header x-api-key, bukan JWT. Isi variabel apiKey di environment.
+order: 6000

@@ -1,0 +1,24 @@
+$kind: http-request
+url: "{{baseUrl}}/api/todos"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "title": "Belajar Postman",
+      "description": "Membuat koleksi untuk semua endpoint",
+      "priority": "high",
+      "dueDate": "2026-12-31",
+      "category": "{{categoryId}}"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status 201", () => pm.response.to.have.status(201));
+      const json = pm.response.json();
+      pm.test('Status awal pending', () => pm.expect(json.data.status).to.eql('pending'));
+      pm.environment.set('todoId', json.data._id);
+    language: text/javascript
+order: 1000

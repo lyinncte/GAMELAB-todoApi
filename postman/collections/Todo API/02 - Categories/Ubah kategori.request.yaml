@@ -1,0 +1,20 @@
+$kind: http-request
+url: "{{baseUrl}}/api/categories/{{categoryId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Kampus",
+      "color": "#3498db"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status 200", () => pm.response.to.have.status(200));
+      const json = pm.response.json();
+      pm.test('Nama berubah', () => pm.expect(json.data.name).to.eql('Kampus'));
+    language: text/javascript
+order: 4000

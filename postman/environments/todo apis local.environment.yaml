@@ -1,0 +1,6 @@
+name: todo apis local
+values:
+  - key: token-uji
+    value: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhZWJmMjI0ZmQyMTU0YWI2MjEzNzdjNSIsImlhdCI6MTc5Mzg0ODc5MSwiZXhwIjoxNzkzOTM1MTkxfQ.HU5zReW3g2pUoD_eE1JJyeTsOxcIuPjgO-DCHfqXeyA'
+- key: token-budi
+value: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhZGFkMWYzMWY5NjhmM2U0MTVkMmEwNCIsImlhdCI6MTc5Mzg1MjgyMywiZXhwIjoxNzkzOTM5MjIzfQ.CgxyovAzNfL6c6o2KreIEVow_uQqwZe7jevHmC6wLB4'

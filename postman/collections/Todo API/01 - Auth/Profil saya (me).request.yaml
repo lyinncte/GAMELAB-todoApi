@@ -1,0 +1,11 @@
+$kind: http-request
+url: "{{baseUrl}}/api/auth/me"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status 200", () => pm.response.to.have.status(200));
+      const json = pm.response.json();
+      pm.test('Email milik akun Postman yang login', () => pm.expect(json.data.user.email).to.match(/^postman_\d+@example\.com$/));
+    language: text/javascript
+order: 3000

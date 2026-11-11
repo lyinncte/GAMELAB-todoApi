@@ -1,0 +1,10 @@
+$kind: http-request
+url: "{{baseUrl}}/api/todos?status=ngasal"
+method: GET
+queryParams:
+  status: ngasal
+scripts:
+  - type: afterResponse
+    code: pm.test("Status 400", () => pm.response.to.have.status(400));
+    language: text/javascript
+order: 5000

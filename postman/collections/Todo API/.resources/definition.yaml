@@ -1,0 +1,11 @@
+$kind: collection
+description: |-
+  Koleksi seluruh endpoint API Todos List Management.
+
+  1. Pilih environment "Todo API - Local".
+  2. Isi variabel apiKey (nilai EXTERNAL_API_KEY dari .env) agar folder Stats lolos.
+  3. Jalankan folder/koleksi dari atas ke bawah (Runner). Token dan ID disimpan otomatis.
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"

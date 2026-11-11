@@ -1,0 +1,19 @@
+$kind: http-request
+url: "{{baseUrl}}/api/todos"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "title": "ab"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status 400", () => pm.response.to.have.status(400));
+      const json = pm.response.json();
+      pm.test('Error di field title', () => pm.expect(json.errors.map((e) => e.field)).to.include('title'));
+    language: text/javascript
+order: 4000

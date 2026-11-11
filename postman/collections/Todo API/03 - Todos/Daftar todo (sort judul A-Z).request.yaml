@@ -1,0 +1,17 @@
+$kind: http-request
+url: "{{baseUrl}}/api/todos?sortBy=title&order=asc"
+method: GET
+queryParams:
+  sortBy: title
+  order: asc
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status 200", () => pm.response.to.have.status(200));
+      const json = pm.response.json();
+      pm.test('Terurut A-Z', () => {
+        const titles = json.data.map((t) => t.title);
+        pm.expect(titles).to.eql([...titles].sort((a, b) => a.localeCompare(b)));
+      });
+    language: text/javascript
+order: 7000

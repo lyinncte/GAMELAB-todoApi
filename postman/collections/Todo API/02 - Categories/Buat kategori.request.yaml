@@ -1,0 +1,20 @@
+$kind: http-request
+url: "{{baseUrl}}/api/categories"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Kuliah",
+      "color": "#e67e22"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status 201", () => pm.response.to.have.status(201));
+      const json = pm.response.json();
+      pm.environment.set('categoryId', json.data._id);
+    language: text/javascript
+order: 1000
