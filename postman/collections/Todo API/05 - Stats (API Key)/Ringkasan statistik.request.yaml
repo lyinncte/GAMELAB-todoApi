@@ -2,7 +2,7 @@ $kind: http-request
 url: "{{baseUrl}}/api/stats/summary"
 method: GET
 headers:
-  x-api-key: "{{vault:api-key}}"
+  x-api-key: "{{apiKey}}"
 auth:
   type: noauth
 scripts:

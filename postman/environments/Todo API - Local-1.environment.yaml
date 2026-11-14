@@ -1,0 +1,20 @@
+name: Todo API - Local
+values:
+  - key: baseUrl
+    value: 'http://localhost:5000'
+  - key: password
+    value: rahasia123
+  - key: email
+    value: ''
+  - key: email2
+    value: ''
+  - key: token
+    value: ''
+  - key: tokenOther
+    value: ''
+  - key: todoId
+    value: ''
+  - key: categoryId
+    value: ''
+  - key: apiKey
+    value: ''

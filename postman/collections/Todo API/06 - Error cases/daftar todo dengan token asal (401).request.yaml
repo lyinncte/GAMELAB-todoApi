@@ -1,0 +1,8 @@
+$kind: http-request
+url: "{{baseUrl}}/api/todos"
+method: GET
+auth:
+  type: bearer
+  credentials:
+    token: asal
+order: 14000

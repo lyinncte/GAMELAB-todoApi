@@ -1,0 +1,9 @@
+$kind: http-request
+description: ""
+url: "{{baseUrl}}/api/todos?search=postman&sortBy=title&status=pending"
+method: GET
+queryParams:
+  search: postman
+  sortBy: title
+  status: pending
+order: 8547
