@@ -20,14 +20,35 @@ app.use(express.json());
 
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 app.get('/api-docs.json', (req, res) => res.json(openapi));
-app.use(
-  '/api-docs',
-  swaggerUi.serve,
-  swaggerUi.setup(openapi, {
-    customSiteTitle: 'Todo API Docs',
-    swaggerOptions: { persistAuthorization: true },
-  })
-);
+app.get(['/api-docs', '/api-docs/'], (req, res) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " +
+      "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " +
+      "img-src 'self' data: https:; font-src 'self' data: https://cdn.jsdelivr.net; connect-src 'self'"
+  );
+  res.type('html').send(`<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <title>API Todos List Management</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.17.14/swagger-ui.css" />
+</head>
+<body>
+  <div id="swagger-ui"></div>
+  <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.17.14/swagger-ui-bundle.js"></script>
+  <script>
+    window.onload = () => {
+      SwaggerUIBundle({
+        url: '/api-docs.json',
+        dom_id: '#swagger-ui',
+        persistAuthorization: true
+      });
+    };
+  </script>
+</body>
+</html>`);
+});
 app.use('/api/stats', statsRoutes);
 app.use('/api/activity-logs', activityRoutes);
 app.use('/api/auth', authRoutes);
