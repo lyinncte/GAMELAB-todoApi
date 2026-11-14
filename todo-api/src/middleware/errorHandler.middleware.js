@@ -2,6 +2,7 @@ const errorHandler = (err, req, res, next) => {
   let statusCode = err.statusCode || 500;
   let message = err.message || 'Internal Server Error';
 
+  
   // Body JSON rusak (misal koma berlebih)
   if (err.type === 'entity.parse.failed') {
     statusCode = 400;
@@ -36,11 +37,11 @@ const errorHandler = (err, req, res, next) => {
     message = 'Token sudah kedaluwarsa, silakan login ulang';
   }
 
-  // Error tak terduga: jangan bocorkan detail ke client di production
-  if (statusCode >= 500) {
-    console.error(err);
-    if (process.env.NODE_ENV === 'production') message = 'Terjadi kesalahan pada server';
-  }
+  // baris pengecekan error 500:
+if (process.env.NODE_ENV === 'production' || process.env.VERCEL) message = 'Terjadi kesalahan pada server';
+
+// bagian res.json:
+stack: process.env.NODE_ENV === 'development' && !process.env.VERCEL ? err.stack : undefined,
 
   res.status(statusCode).json({
     success: false,
@@ -48,6 +49,7 @@ const errorHandler = (err, req, res, next) => {
     errors: err.errors, // daftar kesalahan per field (dari validasi)
     stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
   });
+  
 };
 
 module.exports = errorHandler;

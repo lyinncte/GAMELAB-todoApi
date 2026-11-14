@@ -2,6 +2,9 @@
 
 REST API untuk mengelola daftar tugas (todo) banyak pengguna, dibangun dengan **Node.js**, **Express 5**, dan **MongoDB Atlas**. API ini mendukung autentikasi JWT, hak akses berbasis peran, kategori, pagination, filter, pencarian, pengurutan, activity log otomatis, endpoint statistik dengan API key, dokumentasi Swagger, dan tes otomatis.
 
+**Live API:** https://gamelab-todo-api-ebon.vercel.app  
+**Dokumentasi Swagger:** https://gamelab-todo-api-ebon.vercel.app/api-docs
+
 ## Daftar Isi
 
 - [Fitur](#fitur)
@@ -16,7 +19,9 @@ REST API untuk mengelola daftar tugas (todo) banyak pengguna, dibangun dengan **
 - [Contoh Penggunaan](#contoh-penggunaan)
 - [Hak Akses](#hak-akses)
 - [Format Respons dan Error](#format-respons-dan-error)
+- [Koleksi Postman](#koleksi-postman)
 - [Menjalankan Tes](#menjalankan-tes)
+- [Deploy ke Vercel](#deploy-ke-vercel)
 - [Keamanan](#keamanan)
 - [Penulis](#penulis)
 
@@ -54,13 +59,14 @@ REST API untuk mengelola daftar tugas (todo) banyak pengguna, dibangun dengan **
 
 ```text
 NAMA-REPO/
-├── README.md
+├── README.md                 # dokumentasi ini (tampil di halaman depan GitHub)
 ├── postman/
 │   ├── collections/
 │   │   └── Todo API/                        # koleksi Postman (37 request)
 │   └── environments/
 │       └── Todo API - Local.environment.yaml  # environment Postman
 └── todo-api/
+    ├── api/                # entry point serverless untuk Vercel
     ├── src/
     │   ├── config/         # koneksi database
     │   ├── controllers/    # menerima request, mengirim response
@@ -76,7 +82,8 @@ NAMA-REPO/
     ├── tests/              # tes Jest dan Supertest
     ├── .env.example        # contoh environment variable
     ├── jest.config.js
-    └── package.json
+    ├── package.json
+    └── vercel.json         # konfigurasi deploy Vercel
 ```
 
 Folder `postman/` berisi koleksi dan environment untuk menguji semua endpoint. Semua perintah di README ini dijalankan dari folder `todo-api/`.
@@ -149,7 +156,9 @@ Server berjalan di `http://localhost:5000` (sesuai `PORT`). Cek dengan membuka `
 
 ## Dokumentasi API
 
-Dokumentasi interaktif tersedia di **`http://localhost:5000/api-docs`** (spesifikasi mentah di `/api-docs.json`).
+Dokumentasi interaktif tersedia di **`http://localhost:5000/api-docs`** (spesifikasi mentah di `/api-docs.json`). Halaman ini memuat Swagger UI dari CDN, jadi butuh koneksi internet.
+
+Versi live: https://gamelab-todo-api-ebon.vercel.app/api-docs
 
 Untuk mencoba endpoint yang butuh login:
 
@@ -287,6 +296,18 @@ Respons error:
 | 409 | Data kembar (email atau nama kategori sudah dipakai) |
 | 500 | Kesalahan server |
 
+## Koleksi Postman
+
+Folder `postman/` berisi koleksi **Todo API** (37 request, dikelompokkan: System, Auth, Categories, Todos, Activity Logs, Stats, Error cases, Cleanup) beserta environment **Todo API - Local**.
+
+1. Buka Postman, lalu impor folder koleksi dan file environment dari folder `postman/`.
+2. Pilih environment **Todo API - Local** di pojok kanan atas.
+3. Variabel `baseUrl` bernilai `http://localhost:5000`. Ganti ke `https://gamelab-todo-api-ebon.vercel.app` untuk menguji API live.
+4. Isi API key untuk endpoint statistik (variabel `apiKey` atau Vault Postman dengan nama `api-key`). Nilainya sama dengan `EXTERNAL_API_KEY`.
+5. Klik **Run collection**. Hasil yang diharapkan: seluruh pengecekan lolos (**57 passed**). Variabel `token` dan `todoId` terisi otomatis oleh skrip koleksi.
+
+> Jangan menyimpan token atau API key asli di file environment yang di-commit.
+
 ## Menjalankan Tes
 
 Buat file `.env.test` di folder yang sama dengan `package.json` (jangan di-commit):
@@ -307,6 +328,19 @@ npx jest --runInBand --verbose    # tampilkan nama tiap tes
 
 Tes memakai database MongoDB sementara di memori (`mongodb-memory-server`), sehingga database Atlas tidak tersentuh. Pada run pertama, program MongoDB diunduh sehingga prosesnya lebih lama. Tes mencakup autentikasi, todo (hak akses, pagination, filter, search, sort, validasi), kategori, activity log, dan statistik dengan API key.
 
+## Deploy ke Vercel
+
+API ini berjalan di Vercel sebagai serverless function melalui `api/index.js` dan `vercel.json`.
+
+1. Push repository ke GitHub.
+2. Di Vercel, pilih **Add New → Project**, lalu impor repository.
+3. Isi **Root Directory** dengan `todo-api`.
+4. Tambahkan Environment Variables: `MONGODB_URI`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `EXTERNAL_API_KEY`, dan `NODE_ENV=production`.
+5. Pada MongoDB Atlas → **Network Access**, izinkan `0.0.0.0/0` karena IP Vercel berubah-ubah.
+6. Klik **Deploy**, lalu cek `/health`.
+
+Perubahan environment variable baru berlaku setelah **Redeploy**.
+
 ## Keamanan
 
 - Password di-hash dengan bcryptjs, tidak pernah dikembalikan di respons.
@@ -318,4 +352,4 @@ Tes memakai database MongoDB sementara di memori (`mongodb-memory-server`), sehi
 
 ## Penulis
 
-[Nama lengkap], [Sekolah / Kampus / Perusahaan]
+Muhammad Dzakky, SMKN 12 Kab.Tangerang
