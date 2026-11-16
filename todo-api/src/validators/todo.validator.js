@@ -1,7 +1,7 @@
 const { body, query } = require('express-validator');
 const { requiredString, optionalString, idParam, atLeastOneField } = require('./helpers');
 
-const STATUSES = ['pending', 'in_progress', 'done'];
+const STATUSES = ['pending', 'in_progress', 'completed'];
 const PRIORITIES = ['low', 'medium', 'high'];
 const SORT_FIELDS = ['createdAt', 'updatedAt', 'title', 'dueDate'];
 
@@ -9,6 +9,7 @@ const statusIn = (chain) =>
   chain.isIn(STATUSES).withMessage(`Status harus salah satu dari: ${STATUSES.join(', ')}`);
 
 const commonFields = [
+    body('archived').optional().isBoolean().withMessage('archived harus true atau false').toBoolean(),
   optionalString('description', 'Deskripsi', { max: 500 }),
   body('category')
     .optional({ values: 'null' })

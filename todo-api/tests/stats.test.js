@@ -63,7 +63,7 @@ describe('GET /api/stats/summary', () => {
       categories: 0,
       todos: {
         total: 0,
-        byStatus: { pending: 0, in_progress: 0, done: 0 },
+        byStatus: { pending: 0, in_progress: 0, completed: 0 },
         byPriority: { low: 0, medium: 0, high: 0 },
         overdue: 0,
         completionRate: 0,
@@ -78,9 +78,9 @@ describe('GET /api/stats/summary', () => {
     await Category.create({ user: siti.id, name: 'Kampus' });
     await Todo.insertMany([
       { user: siti.id, title: 'A', status: 'pending', priority: 'high', dueDate: PAST },
-      { user: siti.id, title: 'B', status: 'done', priority: 'low' },
+      { user: siti.id, title: 'B', status: 'completed', priority: 'low' },
       { user: siti.id, title: 'C', status: 'in_progress', priority: 'low' },
-      { user: siti.id, title: 'D', status: 'done', priority: 'medium', dueDate: PAST },
+      { user: siti.id, title: 'D', status: 'completed', priority: 'medium', dueDate: PAST },
     ]);
 
     const res = await request(app).get(URL).set(withKey());
@@ -91,7 +91,7 @@ describe('GET /api/stats/summary', () => {
       categories: 1,
       todos: {
         total: 4,
-        byStatus: { pending: 1, in_progress: 1, done: 2 },
+        byStatus: { pending: 1, in_progress: 1, completed: 2 },
         byPriority: { low: 2, medium: 1, high: 1 },
         overdue: 1, // hanya A: lewat jatuh tempo dan belum selesai
         completionRate: 50,

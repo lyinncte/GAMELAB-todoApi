@@ -27,7 +27,7 @@ const resolveCategory = async (categoryId, userId) => {
 
 // Hanya field yang diizinkan yang dibaca dari input (user tidak bisa diubah lewat body)
 const applyData = async (todo, data) => {
-  for (const field of ['title', 'description', 'priority', 'dueDate']) {
+  for (const field of ['title', 'description', 'priority', 'dueDate','archived']) {
     if (data[field] !== undefined) todo[field] = data[field];
   }
 
@@ -37,7 +37,7 @@ const applyData = async (todo, data) => {
 
   if (data.status !== undefined) {
     todo.status = data.status;
-    todo.completedAt = data.status === 'done' ? todo.completedAt || new Date() : null;
+    todo.completedAt = data.status === 'completed' ? todo.completedAt || new Date() : null;
   }
 };
 
@@ -100,7 +100,7 @@ const getTodoById = async (user, id) => {
 };
 
 const createTodo = async (user, data) => {
-  const todo = new Todo({ user: user._id }); // pemilik selalu dari token
+  const todo = new Todo({ user: user._id, created_by: user._id, updated_by: user._id }); // pemilik selalu dari token
   await applyData(todo, data);
   await todo.save();
   await todo.populate('category', 'name color');
@@ -115,18 +115,19 @@ const updateTodo = async (user, id, data) => {
     throw new AppError('Anda hanya boleh mengubah todo milik sendiri', 403);
   }
 
-  const wasDone = todo.status === 'done';
+  const wasCompleted = todo.status === 'completed';
   await applyData(todo, data);
+  todo.updated_by = user._id;
   await todo.save();
   await todo.populate('category', 'name color');
 
-  const becameDone = !wasDone && todo.status === 'done';
+  const becameCompleted = !wasCompleted && todo.status === 'completed';
   const changed = TRACKED_FIELDS.filter((field) => data[field] !== undefined);
   await activityService.log(
     user,
-    becameDone ? 'complete' : 'update',
+    becameCompleted ? 'complete' : 'update',
     todo,
-    becameDone
+    becameCompleted
       ? `Menyelesaikan todo "${todo.title}"`
       : `Mengubah todo "${todo.title}" (field: ${changed.join(', ')})`
   );

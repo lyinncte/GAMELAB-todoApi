@@ -7,15 +7,15 @@ body:
   type: json
   content: |-
     {
-      "status": "done"
+      "status": "completed"
     }
 scripts:
   - type: afterResponse
     code: |-
       pm.test("Status 200", () => pm.response.to.have.status(200));
       const json = pm.response.json();
-      pm.test('done + completedAt terisi', () => {
-        pm.expect(json.data.status).to.eql('done');
+      pm.test('completed + completedAt terisi', () => {
+        pm.expect(json.data.status).to.eql('completed');
         pm.expect(json.data.completedAt).to.be.a("string");
       });
     language: text/javascript

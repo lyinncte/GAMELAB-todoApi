@@ -3,7 +3,7 @@ const Category = require('../models/Category');
 const Todo = require('../models/Todo');
 const ActivityLog = require('../models/ActivityLog');
 
-const STATUSES = ['pending', 'in_progress', 'done'];
+const STATUSES = ['pending', 'in_progress', 'completed'];
 const PRIORITIES = ['low', 'medium', 'high'];
 const DAY = 24 * 60 * 60 * 1000;
 
@@ -32,13 +32,13 @@ const getSummary = async () => {
     Todo.countDocuments(),
     countBy('status', STATUSES),
     countBy('priority', PRIORITIES),
-    Todo.countDocuments({ status: { $ne: 'done' }, dueDate: { $lt: now } }),
+    Todo.countDocuments({ status: { $ne: 'completed' }, dueDate: { $lt: now } }),
     ActivityLog.countDocuments(),
     ActivityLog.countDocuments({ createdAt: { $gte: new Date(now - 7 * DAY) } }),
   ]);
 
   const completionRate = totalTodos
-    ? Math.round((byStatus.done / totalTodos) * 1000) / 10
+    ? Math.round((byStatus.completed / totalTodos) * 1000) / 10
     : 0;
 
   return {
@@ -49,7 +49,7 @@ const getSummary = async () => {
       byStatus,
       byPriority,
       overdue,
-      completionRate, // persen todo berstatus done
+      completionRate, // persen todo berstatus completed
     },
     activity: {
       total: totalActivities,

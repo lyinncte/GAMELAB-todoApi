@@ -29,8 +29,9 @@ REST API untuk mengelola daftar tugas (todo) banyak pengguna, dibangun dengan **
 
 - **Autentikasi JWT**: registrasi dan login, password disimpan sebagai hash (bcryptjs).
 - **Dua peran**: `user` dan `admin`. User hanya mengakses datanya sendiri, admin boleh melihat semua data tetapi tidak boleh mengubah data milik orang lain.
-- **Todo**: judul, deskripsi, status (`pending`, `in_progress`, `done`), prioritas (`low`, `medium`, `high`), tenggat, dan kategori.
+- **Todo**: judul, deskripsi, status (`pending`, `in_progress`, `completed`), prioritas (`low`, `medium`, `high`), tenggat, kategori, dan status arsip (`archived`).
 - **Kategori** milik masing-masing user, dengan nama unik per user.
+- **Field audit** pada todo dan kategori: `created_by`, `updated_by`, `archived`, serta `createdAt` dan `updatedAt` otomatis.
 - **Daftar todo yang lengkap**: pagination, filter (status, prioritas, kategori), pencarian pada judul dan deskripsi, serta pengurutan.
 - **Activity log** otomatis untuk aksi membuat, mengubah, menyelesaikan, dan menghapus todo. Hanya aksi yang berhasil yang dicatat.
 - **Endpoint statistik** yang dilindungi API key.
@@ -150,7 +151,7 @@ npm run dev
 npm start
 ```
 
-Server berjalan di `http://localhost:5000` (sesuai `PORT`). Cek dengan membuka `http://localhost:5000/health`.
+Server berjalan di `http://localhost:5000` (sesuai `PORT`). Cek dengan membuka `http://localhost:5000/` (status API dan tautan dokumentasi) atau `http://localhost:5000/health`.
 
 > `nodemon` tidak memantau file `.env`. Setelah mengubah `.env`, ketik `rs` lalu Enter pada terminal yang menjalankan `npm run dev`.
 
@@ -170,6 +171,7 @@ Untuk mencoba endpoint yang butuh login:
 
 | Method | Endpoint | Deskripsi | Autentikasi |
 | --- | --- | --- | --- |
+| GET | `/` | Status API dan tautan dokumentasi | Tidak |
 | GET | `/health` | Cek status server | Tidak |
 | POST | `/api/auth/register` | Daftar akun baru | Tidak |
 | POST | `/api/auth/login` | Login dan mendapat token | Tidak |
@@ -194,7 +196,7 @@ Untuk mencoba endpoint yang butuh login:
 | --- | --- | --- |
 | `page` | angka ≥ 1 | `1` |
 | `limit` | 1 sampai 100 | `10` |
-| `status` | `pending`, `in_progress`, `done` | semua |
+| `status` | `pending`, `in_progress`, `completed` | semua |
 | `priority` | `low`, `medium`, `high` | semua |
 | `category` | ID kategori | semua |
 | `search` | teks bebas (judul dan deskripsi) | tanpa pencarian |
@@ -352,4 +354,4 @@ Perubahan environment variable baru berlaku setelah **Redeploy**.
 
 ## Penulis
 
-Muhammad Dzakky, SMKN 12 Kab.Tangerang
+MUHAMMAD DZAKKY, SMKN 12 Kab. Tangerang

@@ -49,6 +49,14 @@ app.get(['/api-docs', '/api-docs/'], (req, res) => {
 </body>
 </html>`);
 });
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'API Todos List Management berjalan',
+    health: '/health',
+    docs: '/api-docs',
+  });
+});
 app.use('/api/stats', statsRoutes);
 app.use('/api/activity-logs', activityRoutes);
 app.use('/api/auth', authRoutes);

@@ -1,4 +1,15 @@
 $kind: http-request
-url: ""
-method: GET
+url: http://localhost:5000/api/auth/register
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"name\":\"budi lagi\",\r
+
+    \    \"email\":\"budi@example.com\",\r
+
+    \    \"password\":\"rahasia123\"\r
+
+    }"
 order: 16000

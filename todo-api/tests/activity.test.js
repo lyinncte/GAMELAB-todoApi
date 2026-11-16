@@ -45,13 +45,13 @@ describe('pencatatan otomatis', () => {
     expect(res.body.data[1].action).toBe('create'); // yang terbaru di atas
   });
 
-  it('status done dicatat sebagai complete, kembali ke pending dicatat sebagai update', async () => {
+  it('status completed dicatat sebagai complete, kembali ke pending dicatat sebagai update', async () => {
     const created = await postTodo(siti, { title: 'Todo status' });
     const id = created.body.data._id;
     const patch = (status) =>
       request(app).patch(`/api/todos/${id}/status`).set(auth(siti)).send({ status });
 
-    await patch('done');
+    await patch('completed');
     expect((await getLogs(siti)).body.data[0].action).toBe('complete');
 
     await patch('pending');

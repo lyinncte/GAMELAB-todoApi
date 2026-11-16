@@ -34,7 +34,7 @@ const getCategoryById = async (user, id) => {
 
 const createCategory = async (user, data) => {
   try {
-    return await Category.create({ user: user._id, name: data.name, color: data.color });
+    return await Category.create({ user: user._id, name: data.name, color: data.color, created_by: user._id, updated_by: user._id });
   } catch (err) {
     handleDuplicate(err);
   }
@@ -48,7 +48,7 @@ const updateCategory = async (user, id, data) => {
 
   if (data.name !== undefined) category.name = data.name;
   if (data.color !== undefined) category.color = data.color;
-
+category.updated_by = user._id;
   try {
     await category.save();
   } catch (err) {

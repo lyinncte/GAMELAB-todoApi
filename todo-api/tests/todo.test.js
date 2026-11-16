@@ -165,14 +165,14 @@ describe('GET /api/todos: filter, sort, search', () => {
   it('memfilter berdasarkan status dan priority', async () => {
     await seed(siti, [
       { title: 'A', status: 'pending', priority: 'high' },
-      { title: 'B', status: 'done', priority: 'high' },
-      { title: 'C', status: 'done', priority: 'low' },
+      { title: 'B', status: 'completed', priority: 'high' },
+      { title: 'C', status: 'completed', priority: 'low' },
     ]);
 
-    const byStatus = await request(app).get('/api/todos').query({ status: 'done' }).set(auth(siti));
+    const byStatus = await request(app).get('/api/todos').query({ status: 'completed' }).set(auth(siti));
     const both = await request(app)
       .get('/api/todos')
-      .query({ status: 'done', priority: 'high' })
+      .query({ status: 'completed', priority: 'high' })
       .set(auth(siti));
 
     expect(byStatus.body.pagination.totalItems).toBe(2);
@@ -238,7 +238,7 @@ describe('GET /api/todos: filter, sort, search', () => {
     await seed(siti, [
       { title: 'Tugas backend', status: 'pending' },
       { title: 'Tugas akhir', status: 'pending' },
-      { title: 'Tugas lama', status: 'done' },
+      { title: 'Tugas lama', status: 'completed' },
       { title: 'Belanja', status: 'pending' },
     ]);
 
@@ -356,11 +356,11 @@ describe('PATCH /api/todos/:id/status', () => {
   const patch = (user, data) =>
     request(app).patch(`/api/todos/${todo.id}/status`).set(auth(user)).send(data);
 
-  it('status done mengisi completedAt, kembali ke pending mengosongkannya', async () => {
-    const done = await patch(siti, { status: 'done' });
-    expect(done.status).toBe(200);
-    expect(done.body.data.status).toBe('done');
-    expect(done.body.data.completedAt).toBeTruthy();
+  it('status completed mengisi completedAt, kembali ke pending mengosongkannya', async () => {
+    const completed = await patch(siti, { status: 'completed' });
+    expect(completed.status).toBe(200);
+    expect(completed.body.data.status).toBe('completed');
+    expect(completed.body.data.completedAt).toBeTruthy();
 
     const pending = await patch(siti, { status: 'pending' });
     expect(pending.body.data.completedAt).toBeNull();
@@ -376,7 +376,7 @@ describe('PATCH /api/todos/:id/status', () => {
   });
 
   it('user lain tidak boleh mengubah status (403)', async () => {
-    const res = await patch(budi, { status: 'done' });
+    const res = await patch(budi, { status: 'completed' });
     expect(res.status).toBe(403);
   });
 });

@@ -4,5 +4,5 @@ method: GET
 auth:
   type: bearer
   credentials:
-    token: asal
+    token: "asal "
 order: 14000

@@ -98,6 +98,9 @@ module.exports = {
           user: { type: 'string', example: '665f1c2e8b1e2a1a2c3d4e5f' },
           createdAt: { type: 'string', format: 'date-time' },
           updatedAt: { type: 'string', format: 'date-time' },
+                    created_by: { type: 'string', nullable: true, example: '665f1c2e8b1e2a1a2c3d4e5f' },
+          updated_by: { type: 'string', nullable: true, example: '665f1c2e8b1e2a1a2c3d4e5f' },
+          archived: { type: 'boolean', example: false },
         },
       },
       Todo: {
@@ -106,7 +109,7 @@ module.exports = {
           _id: { type: 'string', example: '665f1c2e8b1e2a1a2c3d4e61' },
           title: { type: 'string', example: 'Belajar Express' },
           description: { type: 'string', example: 'Baca dokumentasi resmi' },
-          status: { type: 'string', enum: ['pending', 'in_progress', 'done'], example: 'pending' },
+          status: { type: 'string', enum: ['pending', 'in_progress', 'completed'], example: 'pending' },
           priority: { type: 'string', enum: ['low', 'medium', 'high'], example: 'medium' },
           dueDate: { type: 'string', format: 'date-time', nullable: true },
           completedAt: { type: 'string', format: 'date-time', nullable: true },
@@ -114,6 +117,9 @@ module.exports = {
           user: { type: 'string', example: '665f1c2e8b1e2a1a2c3d4e5f' },
           createdAt: { type: 'string', format: 'date-time' },
           updatedAt: { type: 'string', format: 'date-time' },
+          created_by: { type: 'string', nullable: true, example: '665f1c2e8b1e2a1a2c3d4e5f' },
+          updated_by: { type: 'string', nullable: true, example: '665f1c2e8b1e2a1a2c3d4e5f' },
+          archived: { type: 'boolean', example: false },
         },
       },
       ActivityLog: {
@@ -152,7 +158,7 @@ module.exports = {
         properties: {
           title: { type: 'string', minLength: 3, maxLength: 100, example: 'Belajar Express' },
           description: { type: 'string', maxLength: 500, example: 'Baca dokumentasi resmi' },
-          status: { type: 'string', enum: ['pending', 'in_progress', 'done'], default: 'pending' },
+          status: { type: 'string', enum: ['pending', 'in_progress', 'completed'], default: 'pending' },
           priority: { type: 'string', enum: ['low', 'medium', 'high'], default: 'medium' },
           dueDate: { type: 'string', format: 'date', example: '2026-12-31' },
           category: { type: 'string', nullable: true, description: 'ID kategori milik sendiri' },
@@ -164,7 +170,7 @@ module.exports = {
         properties: {
           title: { type: 'string', minLength: 3, maxLength: 100 },
           description: { type: 'string', maxLength: 500 },
-          status: { type: 'string', enum: ['pending', 'in_progress', 'done'] },
+          status: { type: 'string', enum: ['pending', 'in_progress', 'completed'] },
           priority: { type: 'string', enum: ['low', 'medium', 'high'] },
           dueDate: { type: 'string', format: 'date', nullable: true },
           category: { type: 'string', nullable: true },
@@ -192,7 +198,7 @@ module.exports = {
                 properties: {
                   pending: { type: 'integer' },
                   in_progress: { type: 'integer' },
-                  done: { type: 'integer' },
+                  completed: { type: 'integer' },
                 },
               },
               byPriority: {
@@ -286,7 +292,7 @@ module.exports = {
         description: 'User biasa hanya melihat todo miliknya. Admin melihat todo semua user.',
         parameters: [
           ...pageParams,
-          { name: 'status', in: 'query', description: 'Filter status', schema: { type: 'string', enum: ['pending', 'in_progress', 'done'] } },
+          { name: 'status', in: 'query', description: 'Filter status', schema: { type: 'string', enum: ['pending', 'in_progress', 'completed'] } },
           { name: 'priority', in: 'query', description: 'Filter prioritas', schema: { type: 'string', enum: ['low', 'medium', 'high'] } },
           { name: 'category', in: 'query', description: 'Filter berdasarkan ID kategori', schema: { type: 'string' } },
           { name: 'search', in: 'query', description: 'Cari pada judul dan deskripsi (tidak peka huruf besar/kecil)', schema: { type: 'string' } },
@@ -357,13 +363,13 @@ module.exports = {
       patch: {
         tags: ['Todos'],
         summary: 'Ubah status todo',
-        description: 'Status `done` mengisi `completedAt` dan dicatat sebagai aksi `complete`.',
+        description: 'Status `completed` mengisi `completedAt` dan dicatat sebagai aksi `complete`.',
         requestBody: {
           required: true,
           content: json({
             type: 'object',
             required: ['status'],
-            properties: { status: { type: 'string', enum: ['pending', 'in_progress', 'done'], example: 'done' } },
+            properties: { status: { type: 'string', enum: ['pending', 'in_progress', 'completed'], example: 'completed' } },
           }),
         },
         responses: {
