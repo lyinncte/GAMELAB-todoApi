@@ -16,7 +16,15 @@ const pageParams = [
 ];
 
 const ok = (description, schema) => ({ description, content: json(schema) });
-
+const errorBody = (description, message, extra = {}) => ({
+  description,
+  content: {
+    'application/json': {
+      schema: ref('Error'),
+      example: { success: false, message, ...extra },
+    },
+  },
+});
 const envelope = (dataSchema, extra = {}) => ({
   type: 'object',
   properties: { success: { type: 'boolean', example: true }, data: dataSchema, ...extra },
@@ -222,12 +230,20 @@ module.exports = {
       },
     },
 
-    responses: {
-      ValidationError: { description: 'Validasi gagal (400)', content: json(ref('Error')) },
-      Unauthorized: { description: 'Belum login, token tidak valid, atau kedaluwarsa (401)', content: json(ref('Error')) },
-      Forbidden: { description: 'Tidak punya hak akses atas data ini (403)', content: json(ref('Error')) },
-      NotFound: { description: 'Data tidak ditemukan (404)', content: json(ref('Error')) },
-      Conflict: { description: 'Data sudah ada / duplikat (409)', content: json(ref('Error')) },
+        responses: {
+      ValidationError: errorBody('Validasi gagal (400)', 'Validasi gagal', {
+        errors: [{ field: 'title', message: 'Judul minimal 3 karakter' }],
+      }),
+      Unauthorized: errorBody(
+        'Belum login, token tidak valid, atau kedaluwarsa (401)',
+        'Anda belum login. Silakan login terlebih dahulu'
+      ),
+      Forbidden: errorBody(
+        'Tidak punya hak akses atas data ini (403)',
+        'Anda tidak punya izin mengakses todo ini'
+      ),
+      NotFound: errorBody('Data tidak ditemukan (404)', 'Todo tidak ditemukan'),
+      Conflict: errorBody('Data sudah ada / duplikat (409)', 'Email sudah terdaftar'),
     },
   },
 
