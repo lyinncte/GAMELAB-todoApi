@@ -38,8 +38,13 @@ const errorHandler = (err, req, res, next) => {
   }
 
   // baris pengecekan error 500:
-if (process.env.NODE_ENV === 'production' || process.env.VERCEL) message = 'Terjadi kesalahan pada server';
-
+  // Error tak terduga: jangan bocorkan detail ke client di production
+  if (statusCode >= 500) {
+    console.error(err);
+    if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+      message = 'Terjadi kesalahan pada server';
+    }
+  }
 // bagian res.json:
 stack: process.env.NODE_ENV === 'development' && !process.env.VERCEL ? err.stack : undefined,
 
